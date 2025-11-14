@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -119,10 +120,14 @@ USE_TZ = True
 import os
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Optional: project-wide static files folder
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
+    BASE_DIR / "static",
 ]
+
+# Production အတွက် (Render နဲ့ deploy လုပ်တဲ့အချိန်)
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = '/images/'
 
