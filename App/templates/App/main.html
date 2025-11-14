@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static '/bootstrap/css/bootstrap.min.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{% static '/fontawesome/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static '/css/style3.css' %}">
+    <link rel="icon" type="image/png" href="{% static '/images/favicon/favicon-96x96.png' %}" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="{% static '/images/favicon/favicon.svg' %}" />
+    <link rel="shortcut icon" href="{% static '/images/favicon/favicon.ico' %}" />
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static '/images/favicon/apple-touch-icon.png' %}" />
+    <meta name="apple-mobile-web-app-title" content="Universe" />
+    <link rel="manifest" href="{% static '/images/favicon/site.webmanifest' %}" />
+
+    <title>{% block title_name %}{% endblock title_name %} | Universe</title>
+    <script>
+        var user = "{{ request.user }}"
+
+        function getToken(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getToken('csrftoken')
+    </script>
+
+
+</head>
+
+<body>
+
+
+
+
+    {% block content %}
+
+    {% endblock content %}
+
+
+
+    <script src="{% static '/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+    <script src="{% static '/js/script.js' %}"></script>
+    <script src="{% static '/js/cart2.js' %}"></script>
+</body>
+
+</html>

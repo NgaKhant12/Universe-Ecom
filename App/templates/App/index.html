@@ -1,0 +1,706 @@
+{% extends "App/main.html" %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title_name %}Home{% endblock title_name %}</title>
+
+
+
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            scroll-behavior: smooth;
+            background-color: #f8f9fa;
+        }
+
+
+
+        /* Products */
+
+        .products {
+            padding: 5% 0;
+        }
+
+        .product-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-img {
+            height: 220px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        @media(max-width:576px) {
+
+            .product-card {
+                width: 80%;
+            }
+
+            .card-img img {
+
+                object-fit: contain;
+            }
+
+        }
+
+
+
+        .discount-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #dc3545;
+            color: white;
+            font-size: 0.8rem;
+            padding: 5px 10px;
+            border-radius: 10px;
+        }
+
+        .favorite,
+        .view {
+            position: absolute;
+            right: 10px;
+            background: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .favorite:hover,
+        .view:hover {
+            background: #0d6efd;
+            color: #fff;
+        }
+
+        .favorite {
+            top: 10px;
+        }
+
+        .view {
+            top: 55px;
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        .product-name {
+            font-weight: 600;
+            font-size: 1.05rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .price {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #28a745;
+        }
+
+        .old-price {
+            text-decoration: line-through;
+            color: #888;
+            margin-left: 5px;
+            font-size: 0.9rem;
+        }
+
+        .rating i {
+            color: #ffc107;
+            font-size: 0.9rem;
+        }
+
+        .add-to-cart {
+            background-color: #007bff;
+            border: none;
+            color: #fff;
+            font-weight: 500;
+            border-radius: 8px;
+            padding: 6px 12px;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .add-to-cart:hover {
+            background-color: #0056b3;
+        }
+    </style>
+
+
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-md navbar-light sticky-top shadow">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#home"><img src="{% static '/images/logo_universe.png' %}"
+                    class="img-fluid ms-4 ms-lg-5 mt-1" alt="Logo."></a>
+            <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTog"
+                aria-controls="collapsibleNavId" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarTog">
+                <ul class="navbar-nav me-auto w-100 mt-0 justify-content-around s-auto ">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home" aria-current="page">Home
+                            <span class="visually-hidden">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#products">Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#about" class="nav-link">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#contact" class="nav-link">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'cart' %}" target="_blank" class="nav-link position-relative">
+                            <i class="fas fa-shopping-cart fs-5"></i>
+                            <span
+                                class="badge bg-danger position-absolute bottom-50 start-100  translate-middle rounded-pill w-auto"
+                                style="z-index: 4; ">{{cart_items}}</span></a>
+                    </li>
+
+                </ul>
+
+                <form method="get" class="d-none d-sm-flex search_form " action="" method="post">
+                    <div class="input-group search-box">
+                        <input class="form-control search-input" type="text" name="search_product"
+                            placeholder="Search..." value="{{ request.GET.search_product }}" />
+                        <button class="search-btn" type="submit">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+
+                <div class="dropdown mx-auto">
+                    <a class="btn dropdown-toggle" href="#" id="dropdownId" data-bs-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-user-circle fs-3"></i>
+                    </a>
+
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownId">
+                        <a class="dropdown-item" target="_blank" href="{% url 'favorite' %}"><i
+                                class="far fa-heart me-1"></i>Favorite</a>
+                        <a class="dropdown-item" target="_blank" href="#"><i class="far fa-user me-1"></i>Login</a>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </nav>
+    <form method="get" class="d-flex d-md-none search_form my-2">
+        <div class="input-group search-box">
+            <input class="form-control search-input" type="text" name="search_product" placeholder="Search..." />
+            <button class="search-btn" type="submit">
+                <i class="fa fa-search"></i>
+            </button>
+        </div>
+    </form>
+
+
+
+
+    {% if not search_mode %}
+    <!-- Home Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <h1>Welcome to Universe</h1>
+            <p>Your one-stop shop for the latest gadgets, electronics, and smart tech — all in one place.</p>
+            <a href="#products" class="btn btn-shop mt-3">Shop Now</a>
+        </div>
+    </section>
+
+    {% endif %}
+
+    <!-- Categories -->
+    <!-- <section class="categories container text-center">
+        <h2 class="fw-bold mb-5 text-primary">Shop by Category</h2>
+        <div class="row g-4">
+            <div class="col-6 col-md-3">
+                <div class="category-box">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h5>Mobiles</h5>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="category-box">
+                    <i class="fas fa-laptop"></i>
+                    <h5>Laptops</h5>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="category-box">
+                    <i class="fas fa-headphones"></i>
+                    <h5>Accessories</h5>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="category-box">
+                    <i class="fas fa-tv"></i>
+                    <h5>Smart Devices</h5>
+                </div>
+            </div>
+        </div>
+    </section> -->
+
+    <!--  Products -->
+
+    <section id="products" class="products">
+        <div class="container py-5">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold text-primary">Our Products </h2>
+                <p class="text-muted">Discover our latest tech items and accessories</p>
+            </div>
+
+            <div class="row g-3 justify-content-center">
+                <!-- Product Card  -->
+                {% for product in products %}
+                <div class="col-10 col-sm-6 col-md-4 col-lg-3">
+                    <div class="card product-card mx-auto">
+                        <div class="card-img ">
+                            <img src="{{product.image.url}}" alt="Product" class="">
+                            <span class="discount-badge">Sale {{product.discount_percent}}%</span>
+                            <div class="action-buttons">
+                                <button class="favorite favorite-btn" data-productID="{{product.id}}"
+                                    data-action="fav"><i class="far fa-heart text-danger"></i></button>
+                                <button class="view"><i class="far fa-eye"></i></button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="product-name">{{product.name}}</h6>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="price">${{product.price|floatformat:0}}</span>
+                                    <span class="old-price">${{product.old_price|floatformat:0}}</span>
+                                    <div class="rating mt-1">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                        <i class="far fa-star"></i>
+                                    </div>
+                                </div>
+                                <button class="add-to-cart update-cart" data-productID="{{product.id}}"
+                                    data-action="add"><i class="fas fa-cart-plus"></i> Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+
+                <!-- Copy this block for more products -->
+            </div>
+        </div>
+    </section>
+
+
+    {% if not search_mode %}
+    <!-- About -->
+    <section id="about" class="about-section">
+        <div class="container text-center">
+            <div class="text-center mb-5">
+                <h1 class="fw-bold text-primary">About Universe Store</h1>
+                <p class="text-muted">We bring you the best electronics, gadgets, and tech accessories with a commitment
+                    to
+                    quality and innovation.</p>
+            </div>
+
+
+            <div class="row align-items-center g-4">
+                <div class="col-12 col-md-6">
+                    <img src="https://images.unsplash.com/photo-1593642634367-d91a135587b5?auto=format&fit=crop&w=900&q=80"
+                        alt="Our Story">
+                </div>
+                <div class="col-12 col-md-6">
+                    <h2 class="text-dark">Our Story</h2>
+                    <p>
+                        Founded in 2020, <strong>Universe</strong> started with a vision to make the latest technology
+                        accessible to everyone. From smartphones and laptops to accessories and smart home devices,
+                        we curate top-quality products that fit your modern lifestyle.
+                    </p>
+                    <p>
+                        Our team of tech enthusiasts ensures every product we offer meets the highest standards of
+                        innovation,
+                        performance, and reliability.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- Why Choose Us -->
+    <section class="why-choose">
+        <div class="container text-center">
+            <h2 class="mb-4">Why Choose Us</h2>
+            <div class="row g-4">
+                <div class="col-6 col-md-3">
+                    <div class="feature-box">
+                        <i class="fas fa-thumbs-up"></i>
+                        <h5>Quality Products</h5>
+                        <p>We only offer trusted and top-rated electronics.</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="feature-box">
+                        <i class="fas fa-shipping-fast"></i>
+                        <h5>Fast Delivery</h5>
+                        <p>Quick and reliable shipping to your doorstep.</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="feature-box">
+                        <i class="fas fa-headset"></i>
+                        <h5>24/7 Support</h5>
+                        <p>We're always here to help with any inquiries.</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="feature-box">
+                        <i class="fas fa-hand-holding-usd"></i>
+                        <h5>Affordable Prices</h5>
+                        <p>Get high-quality tech without breaking the bank.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Team -->
+    <section class="team-section text-center">
+        <div class="container">
+            <h2 class="mb-5">Meet Our Team</h2>
+            <div class="row g-4 justify-content-center">
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="team-card p-3">
+                        <img src="{% static '/images/th.webp' %}" alt="Team Member">
+                        <h6>Nga Khant</h6>
+                        <small>Founder / Developer</small>
+
+                        <div class="contact-links text-center text-dark ">
+                            <a href="" class="btn "><i class="fab fa-facebook"></i></a>
+                            <a href="#" class="btn"><i class="fab fa-telegram"></i></a>
+
+                            <a href="#" class="btn"><i class="fab fa-github "></i></i></a>
+                            <a href="#" class="btn"><i class="fab fa-instagram"></i></a>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="team-card p-3">
+                        <img src="{% static '/images/OIP (1).jfif' %}" alt="Team Member">
+                        <h6>Jane Doe</h6>
+                        <small>Marketing Manager</small>
+
+                        <div class="contact-links text-center text-dark ">
+                            <a href="" class="btn "><i class="fab fa-facebook"></i></a>
+                            <a href="#" class="btn"><i class="fab fa-telegram"></i></a>
+
+                            <a href="#" class="btn"><i class="fab fa-github "></i></i></a>
+                            <a href="#" class="btn"><i class="fab fa-instagram"></i></a>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="team-card p-3">
+                        <img src="{% static '/images/download.webp' %}" alt="Team Member">
+                        <h6>John Smith</h6>
+                        <small>Customer Support</small>
+                        <div class="contact-links text-center text-dark ">
+                            <a href="" class="btn "><i class="fab fa-facebook"></i></a>
+                            <a href="#" class="btn"><i class="fab fa-telegram"></i></a>
+
+                            <a href="#" class="btn"><i class="fab fa-github "></i></i></a>
+                            <a href="#" class="btn"><i class="fab fa-instagram"></i></a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+
+    <section id="customer_reviews">
+        <div class="container-fluid bg-light py-3 mt-2">
+            <h2 class="fw-bold mb-3">Customer Reviews</h2>
+            <div class="row justify-content-center g-1">
+                <div class="col-6  col-md-4 col-lg-3 mb-1">
+                    <div class="card shadow-sm rounded ">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div class="d-flex">
+                                    <img src="{% static '/images/OIP (1).jfif' %}"
+                                        class="rounded-circle me-3 customer_reviews_imgs" width="50" height="50"
+                                        alt="User1">
+                                    <div>
+                                        <h5 class="mb-0 customer_name">John Doe</h5>
+                                        <div class="text-warning cus-rating">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="far fa-star"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <i class="fas fa-quote-right quote"></i>
+                                </div>
+                            </div>
+                            <p class="card-text customer_review_description">Nice products and great customer service.I
+                                like this store.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6  col-md-4 col-lg-3 mb-1">
+                    <div class="card shadow-sm rounded ">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div class="d-flex">
+                                    <img src="{% static '/images/download.webp' %}"
+                                        class="rounded-circle me-3 customer_reviews_imgs" width="50" height="50"
+                                        alt="User1">
+                                    <div>
+                                        <h5 class="mb-0 customer_name">Smith</h5>
+                                        <div class="text-warning cus-rating">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="far fa-star"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <i class="fas fa-quote-right quote"></i>
+                                </div>
+                            </div>
+                            <p class="card-text customer_review_description">Nice products and great customer service.I
+                                like this store.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6  col-md-4 col-lg-3 mb-1">
+                    <div class="card shadow-sm rounded ">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div class="d-flex">
+                                    <img src="{% static '/images/th.webp' %}"
+                                        class="rounded-circle me-3 customer_reviews_imgs" width="50" height="50"
+                                        alt="User1">
+                                    <div>
+                                        <h5 class="mb-0 customer_name">Mar Mu</h5>
+                                        <div class="text-warning cus-rating">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="far fa-star"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <i class="fas fa-quote-right quote"></i>
+                                </div>
+                            </div>
+                            <p class="card-text customer_review_description">Nice products and great customer service.I
+                                like this store.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6  col-md-4 col-lg-3 mb-1">
+                    <div class="card shadow-sm rounded ">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div class="d-flex">
+                                    <img src="{% static '/images/th (1).webp' %}"
+                                        class="rounded-circle me-3 customer_reviews_imgs" width="50" height="50"
+                                        alt="User1">
+                                    <div>
+                                        <h5 class="mb-0 customer_name">Willan Jame</h5>
+                                        <div class="text-warning cus-rating">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="far fa-star"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <i class="fas fa-quote-right quote"></i>
+                                </div>
+                            </div>
+                            <p class="card-text customer_review_description">Nice products and great customer service.I
+                                like this store.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container my-5">
+            <div class="text-center mb-2">
+                <h1 class="fw-bold text-primary">Contact Us</h1>
+                <p class="text-muted">We'd love to hear from you! Get in touch with our team for inquiries, support, or
+                    collaborations.</p>
+            </div>
+            <div class="mb-4 text-center">
+                <p class="text-muted" style="font-size: 1.2rem;">Visit our Universe Store location below</p>
+            </div>
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2998.816232492431!2d95.2420241355099!3d21.637352922940483!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30ca64dde3cc98e3%3A0xb13ccef9d8eaf04!2sMyoma%20Market!5e1!3m2!1sen!2smm!4v1761980187347!5m2!1sen!2smm"
+                width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+    </section>
+
+    <!-- Contact Form -->
+    <section class="contact-section">
+        <div class="container">
+            <div class="row g-4 align-items-stretch">
+                <!-- Contact Info -->
+                <div class="col-md-5">
+                    <div class="contact-info">
+                        <h4>Get in Touch</h4>
+                        <p><i class="fas fa-map-marker-alt"></i>12x3 Mingalar Street, Yesagyo, Myanmar</p>
+                        <p><i class="fas fa-phone"></i><a href="tel:09772284019" target="_blank">+95 9 123 456 789</a>
+                        </p>
+                        <p><i class="fas fa-envelope"></i><a href="mailto:ngakhant464f@gmail.com"
+                                target="_blank">universemyanmar@universe.com</a>
+                        </p>
+                        <p><i class="fas fa-earth"></i><a href="#" target="_blank">www.universemyanmar.com</a></p>
+
+                        <hr>
+                        <p><i class="fas fa-clock text-primary"></i><strong>Mon - Fri : </strong> 9:00 AM - 6:00 PM</p>
+                        <p><i class="fas fa-clock text-primary"></i><strong>Sat &ThickSpace; &ThickSpace; &ThickSpace;
+                                &ThickSpace; :
+                            </strong> 10:00 AM - 4:00 PM</p>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="col-md-7">
+                    <div class="contact-form">
+                        <h4 class="text-primary fw-bold mb-4">Send Us a Message</h4>
+                        <form>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" placeholder="Your Name" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="email" class="form-control" placeholder="Your Email" required>
+                                </div>
+                                <div class="col-12">
+                                    <input type="text" class="form-control" placeholder="Subject">
+                                </div>
+                                <div class="col-12">
+                                    <textarea rows="5" class="form-control" placeholder="Your Message"
+                                        required></textarea>
+                                </div>
+                                <div class="col-12 text-end">
+                                    <button type="submit" class="btn-send">
+                                        <i class="fas fa-paper-plane me-2"></i>Send Message
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    {% endif %}
+
+
+
+
+
+    <!--  -->
+    <footer class="mt-4">
+        <div class="d-flex flex-column text-start ms-5">
+            <a href="#home">Home</a>
+            <a href="#products">Products</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+        </div>
+        <p>© 2025 Universe By Nga Khant. All Rights Reserved.</p>
+
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const params = new URLSearchParams(window.location.search);
+            const hasQuery = params.has('search_product');
+
+            if (hasQuery) {
+                // ✅ 1. Scroll to products (optional)
+                const productsSection = document.querySelector('#products');
+                if (productsSection) {
+                    productsSection.scrollIntoView({ behavior: 'smooth' });
+                }
+
+                // ✅ 2. Remove query from address bar AFTER page is loaded
+                const cleanUrl = window.location.origin + window.location.pathname;
+                window.history.replaceState({}, document.title, cleanUrl);
+            }
+        });
+    </script>
+
+
+
+
+
+</body>
+
+</html>
+
+
+{% endblock content %}

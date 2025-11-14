@@ -1,0 +1,167 @@
+{% extends "App/main.html" %}
+
+{% block content %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title_name %}Cart{% endblock title_name %}</title>
+
+
+
+</head>
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f4f4f4;
+    }
+
+    table {
+        border: 1px solid black;
+
+    }
+
+    section .cart_imgs {
+        max-height: 70px;
+    }
+
+    section .d-flex {
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .btn-tiny {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.7rem;
+        line-height: 1;
+    }
+
+
+
+
+
+
+    section .cart_total_box {
+        max-width: 300px;
+    }
+
+    .checkout-btn {
+        background-color: #0d6efd;
+        color: white;
+        border: none;
+        border-radius: 30px;
+        padding: 10px 17px;
+        transition: all 0.3s ease;
+    }
+
+    .checkout-btn:hover {
+        background-color: #084298;
+    }
+</style>
+
+<body>
+    <header class="my-4">
+        <h2 class="text-center">My Shopping Cart</h2>
+    </header>
+
+    <section>
+        <div class="container-fluid">
+            <div class="row g-3 justify-content-center">
+                <div class="col-12">
+                    <div class="card shadow rounded-3">
+                        <div class="card-body">
+                            <div class="d-flex mb-2 fw-bold">
+                                <div style="flex:2">Product</div>
+                                <div style="flex:2"></div>
+
+                                <div style="flex:1">Price</div>
+                                <div style="flex:2">Quantity</div>
+                                <div style="flex:1">Subtotal</div>
+                                <div style="flex:1"></div>
+                            </div>
+                            <hr>
+
+                            {% if not order_items %}
+                            <h6 class="text-center">There is no product in your cart</h6>
+                            {% endif %}
+                            {% for item in order_items %}
+                            <div class="d-flex mb-2">
+                                <div style="flex:1"><img src="{{item.product.image.url}}" alt="Product1"
+                                        class="cart_imgs"></div>
+                                <div style="flex:3">{{ item.product.name }}</div>
+                                <div style="flex:1">$ {{ item.product.price }}</div>
+                                <div style="flex:2"><button data-productID="{{item.product.id}}" data-action="add"
+                                        class="btn btn-outline-dark rounded-5 btn-tiny update-cart"><i
+                                            class="fas fa-add"></i></button><span
+                                        class="mx-2">{{item.quantity}}</span><button
+                                        data-productID="{{item.product.id}}" data-action="remove"
+                                        class="btn btn-outline-dark rounded-5 btn-tiny update-cart"><i
+                                            class="fas fa-subtract "></i></button>
+                                </div>
+                                <div style="flex:1">$ {{ item.total_cost }}</div>
+                                <div style="flex:1" class=" text-center"><button data-productID="{{item.product.id}}"
+                                        data-action="delete" class="btn update-cart"><i
+                                            class="fas fa-trash text-danger"></i></button></div>
+                            </div>
+                            <hr>
+                            {% endfor %}
+
+                            <hr>
+                            <div class="mt-5">
+
+                                <div class="d-flex px-3 mb-1">
+                                    <div style="flex:1">
+                                        <h6>Subtotal</h6>
+                                    </div>
+                                    <div style="flex:1" class="">
+                                        <h6>$ {{total_cost}}</h6>
+                                    </div>
+                                </div>
+                                <div class="d-flex px-3 mb-2">
+                                    <div style="flex:1">
+                                        <h6>Shipping</h6>
+                                    </div>
+                                    <div style="flex:1" class="">
+                                        <h6>Free</h6>
+                                    </div>
+                                </div>
+                                <hr class="my-1">
+
+                                <div class="d-flex px-3 mt-3 mb-4">
+                                    <div style="flex:1"><span class="fw-bold">Total</span></div>
+                                    <div style="flex:1" class=""><span class="fw-bold">$ {{total_cost}}</span></div>
+                                </div>
+
+
+                                <div class="d-flex justify-content-around mt-4 px-4">
+                                    <a href="{% url 'home' %}"
+                                        class="btn btn-outline-dark rounded-5 btn-sm btn-md-lg"><i
+                                            class="fa-solid fa-arrow-left me-2"></i>Return to Shop</a>
+                                    <a href="{% url 'checkout' %}" target="_blank"
+                                        class="btn btn-outline-primary rounded-5 btn-sm">
+                                        Proceed to Checkout <i class="fa-solid fa-arrow-right ms-2"></i>
+                                    </a>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+    </section>
+
+
+</body>
+
+</html>
+
+{% endblock content %}

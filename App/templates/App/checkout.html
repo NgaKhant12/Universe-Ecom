@@ -1,0 +1,323 @@
+{% extends "App/main.html" %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title_name %}Checkout{% endblock title_name %} </title>
+
+    <script
+        src="https://www.paypal.com/sdk/js?client-id=AUBq5qqqXKtoFlLWyDaylsJdUXXQTsZXVB5KaVp8u2-CiaarzbEr2bbDRAQuKP39UnqFhK10R1dFmILx&currency=USD"></script>
+    
+
+    <style>
+        * {
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .checkout-container {
+            max-width: 95%;
+            margin: 50px auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px 20px;
+        }
+
+        .checkout-title {
+            font-weight: 600;
+            font-size: 28px;
+            margin-bottom: 30px;
+        }
+
+        .billing-card {
+            background-color: #f8f9fb;
+            border-radius: 12px;
+            padding: 10px;
+            margin: 5px auto;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            box-shadow: none;
+        }
+
+        .form-control:focus {
+            border-color: rgb(223, 208, 184);
+            box-shadow: 0 0 0 0.15rem rgba(223, 208, 184, 0.25);
+        }
+
+        .place-order-btn {
+            width: 90%;
+            border: none;
+            background-color: #084298;
+            color: white;
+            border-radius: 30px;
+            padding: 12px;
+            font-weight: 500;
+            margin: 10px auto;
+            transition: all 0.3s ease;
+        }
+
+        .place-order-btn:hover {
+            color: black;
+            background-color: rgb(223, 208, 184);
+        }
+
+        .order-summary {
+            background-color: #f8f9fb;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .payment-section {
+            display: none;
+        }
+
+        .animation_cards {
+            transform: translateY(50px);
+            animation: slideUp 1s forwards;
+            opacity: 0;
+        }
+
+        .animation_cards:nth-child(1) {
+            animation-delay: 0.2s;
+        }
+
+        .animation_cards:nth-child(2) {
+            animation-delay: 0.4s;
+        }
+
+        .animation_cards:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animation_cards.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container checkout-container">
+        <h3 class="checkout-title">
+            <i class="fa-solid fa-credit-card me-2"></i>Checkout
+        </h3>
+
+        <div class="row g-3">
+            <div class="col-md-7 animation_cards">
+                <h5 class="fw-semibold mb-3">Billing Details</h5>
+                <div class="card m-0 border-0 billing-card">
+                    <div class="card-body">
+                        <form id="checkout-form" method="post">
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <label class="form-label">First Name</label>
+                                    <input type="text" class="form-control" placeholder="John" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" placeholder="Doe" />
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" class="form-control" placeholder="john@example.com" />
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Phone Number</label>
+                                <input type="text" class="form-control" placeholder="+95 9 123 456 789" />
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Address</label>
+                                <input type="text" class="form-control" placeholder="123 Main Street" />
+                            </div>
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <label class="form-label">City</label>
+                                    <input type="text" class="form-control" placeholder="Yangon" />
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <label class="form-label">Postal Code</label>
+                                    <input type="text" class="form-control" placeholder="11011" />
+                                </div>
+                            </div>
+                            <div class="form-check mb-4">
+                                <input class="form-check-input" type="checkbox" id="saveInfo" />
+                                <label class="form-check-label" for="saveInfo">Save my information for next time</label>
+                            </div>
+                            <button type="submit" class="place-order-btn">
+                                Place Order <i class="fa-solid fa-arrow-right ms-2"></i>
+                            </button>
+                        </form>
+                        <div class="my-4 payment" style="display: none">
+                            <label class="form-label">Payment Method</label>
+                            <select id="paymentMethod" class="form-select rounded-3" required>
+                                <option value="" disabled selected>
+                                    Select Payment Method
+                                </option>
+                                <option value="cod">Cash on Delivery</option>
+                                <option value="kbz">KBZ Pay</option>
+                                <option value="wave">Wave Pay</option>
+                                <option value="card">Credit/Debit Card</option>
+                                <option value="paypal">PayPal</option>
+                            </select>
+                        </div>
+
+                        <!-- KBZ -->
+                        <div id="kbz-section" class="payment-section">
+                            <h6>
+                                <i class="fa-solid fa-qrcode me-2 text-primary"></i>Pay with
+                                KBZ Pay
+                            </h6>
+                            <img src="https://i.ibb.co/YWbTcdx/kbzpay-qr.png" width="150" class="my-2" />
+                            <input type="text" class="form-control" placeholder="Enter KBZ Pay Transaction ID" />
+                        </div>
+
+                        <!-- Wave -->
+                        <div id="wave-section" class="payment-section">
+                            <h6>
+                                <i class="fa-solid fa-mobile-screen-button me-2 text-warning"></i>Pay with Wave Pay
+                            </h6>
+                            <p class="">Transfer to <b>09 - 987654321</b></p>
+                            <input type="text" class="form-control" placeholder="Enter Last 4 Transaction ID" />
+                        </div>
+
+                        <!-- Card -->
+                        <div id="card-section" class="payment-section">
+                            <h6>
+                                <i class="fa-regular fa-credit-card me-2 text-success"></i>Credit / Debit Card
+                            </h6>
+                            <input type="text" class="form-control mb-2" placeholder="Card Number" />
+                            <div class="row">
+                                <div class="col-6">
+                                    <input type="text" class="form-control mb-2" placeholder="MM/YY" />
+                                </div>
+                                <div class="col-6">
+                                    <input type="text" class="form-control mb-2" placeholder="CVV" />
+                                </div>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Card Holder Name" />
+                        </div>
+
+                        <!-- PayPal -->
+                        <div id="paypal-section" class="payment-section">
+                            <h6>
+                                <i class="fa-brands fa-paypal me-2 text-info"></i>Pay with
+                                PayPal
+                            </h6>
+                            <div id="paypal-button-container"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-5 animation_cards">
+                <h5 class="fw-semibold mb-3">Order Summary</h5>
+                <div class="order-summary">
+                    <form action="">
+                        {% for item in order_items %}
+                        <div class="d-flex mb-2">
+                            <div style="flex: 4">{{ item.product.name }}</div>
+                            <div style="flex: 1">x {{ item.quantity }}</div>
+                            <div style="flex: 1" class="text-end">$ {{ item.total_cost }}</div>
+                        </div>
+                        {% endfor %}
+
+
+                        <hr />
+                        <div class="d-flex mt-3">
+                            <div style="flex: 2" class="text-start ml-4">
+                                <h5>Total Items</h5>
+                            </div>
+                            <div style="flex: 1" class="text-md-end">
+                                <h5>{{ total_item }}</h5>
+                            </div>
+                        </div>
+                        <div class="d-flex mt-3">
+                            <div style="flex: 2" class="text-start ml-4">
+                                <h5>Total Cost</h5>
+                            </div>
+                            <div style="flex: 1" class="text-md-end">
+                                <h5>$ {{ total_cost }}</h5>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle payment sections
+        const paymentSelect = document.getElementById("paymentMethod");
+        const sections = {
+            kbz: document.getElementById("kbz-section"),
+            wave: document.getElementById("wave-section"),
+            card: document.getElementById("card-section"),
+            paypal: document.getElementById("paypal-section"),
+        };
+
+        paymentSelect.addEventListener("change", () => {
+            Object.values(sections).forEach((sec) => (sec.style.display = "none"));
+            const selected = paymentSelect.value;
+            if (sections[selected]) sections[selected].style.display = "block";
+        });
+
+        // Checkout form submit
+        document
+            .getElementById("checkout-form")
+            .addEventListener("submit", (e) => {
+                e.preventDefault();
+                console.log("OK!");
+                alert("✅ Order placed successfully!");
+                document.querySelector(".place-order-btn").style.display = "none";
+                document.querySelector(".payment").style.display = "block";
+            });
+
+        // PayPal Button
+        paypal
+            .Buttons({
+                createOrder: function (data, actions) {
+                    return actions.order.create({
+                        purchase_units: [
+                            {
+                                amount: { value: "670.00" },
+                            },
+                        ],
+                    });
+                },
+                onApprove: function (data, actions) {
+                    return actions.order.capture().then(function (details) {
+                        alert(
+                            "Transaction completed by " + details.payer.name.given_name
+                        );
+                        window.location.href = "/thank-you.html";
+                    });
+                },
+            })
+            .render("#paypal-button-container");
+    </script>
+</body>
+
+</html>
+
+{% endblock content %}
