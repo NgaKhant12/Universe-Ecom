@@ -3,6 +3,8 @@ for (var i = 0; i < updateBtns.length; i++) {
   updateBtns[i].addEventListener("click", function () {
     var productID = this.dataset.productid;
     var action = this.dataset.action;
+    var product_price = this.dataset.price;
+    var orderitem_quantity = this.dataset.quantity;
     console.log("productID:", productID, "Action:", action);
     console.log("USER:", user);
     if (user == "AnonymousUser") {
@@ -11,6 +13,16 @@ for (var i = 0; i < updateBtns.length; i++) {
       updateUserOrder(productID, action);
     }
   });
+}
+
+function updateSubtotal(id, action, price, quantity) {
+  if (action === "add") {
+    quantity = quantity + 1;
+  } else if (action === "remove") {
+    quantity = quantity - 1;
+  }
+  total_price = quantity * price;
+  console.log("Item quantity: ", quantity, "Total price: ", total_price);
 }
 
 var fav_btns = document.getElementsByClassName("favorite-btn");

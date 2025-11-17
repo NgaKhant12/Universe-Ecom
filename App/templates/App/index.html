@@ -28,6 +28,7 @@
 
         .products {
             padding: 5% 0;
+
         }
 
         .product-card {
@@ -195,10 +196,10 @@
 
                 </ul>
 
-                <form method="get" class="d-none d-sm-flex search_form " action="" method="post">
+                <form method="get" class="d-none d-md-flex search_form " action="" method="post">
                     <div class="input-group search-box">
                         <input class="form-control search-input" type="text" name="search_product"
-                            placeholder="Search..." value="{{ request.GET.search_product }}" />
+                            placeholder="Search..." value="" />
                         <button class="search-btn" type="submit">
                             <i class="fa fa-search"></i>
                         </button>
@@ -278,9 +279,8 @@
     </section> -->
 
     <!--  Products -->
-
     <section id="products" class="products">
-        <div class="container py-5">
+        <div class="container py-3">
             <div class="text-center mb-4">
                 <h2 class="fw-bold text-primary">Our Products </h2>
                 <p class="text-muted">Discover our latest tech items and accessories</p>
@@ -290,6 +290,7 @@
                 <!-- Product Card  -->
                 {% for product in products %}
                 <div class="col-10 col-sm-6 col-md-4 col-lg-3">
+
                     <div class="card product-card mx-auto">
                         <div class="card-img ">
                             <img src="{{product.image.url}}" alt="Product" class="">
@@ -320,7 +321,14 @@
                         </div>
                     </div>
                 </div>
+                {% empty %}
+
+                <h3 class="text-center">There is no product you searched " {{request.GET.search_product}} "! </h3>
+
+
+
                 {% endfor %}
+
 
 
                 <!-- Copy this block for more products -->
@@ -368,7 +376,7 @@
     <section class="why-choose">
         <div class="container text-center">
             <h2 class="mb-4">Why Choose Us</h2>
-            <div class="row g-4">
+            <div class="row g-2">
                 <div class="col-6 col-md-3">
                     <div class="feature-box">
                         <i class="fas fa-thumbs-up"></i>
@@ -380,21 +388,21 @@
                     <div class="feature-box">
                         <i class="fas fa-shipping-fast"></i>
                         <h5>Fast Delivery</h5>
-                        <p>Quick and reliable shipping to your doorstep.</p>
+                        <p>Quick and reliable shipping to your doorstep by fast delivery.</p>
                     </div>
                 </div>
                 <div class="col-6 col-md-3">
                     <div class="feature-box">
                         <i class="fas fa-headset"></i>
                         <h5>24/7 Support</h5>
-                        <p>We're always here to help with any inquiries.</p>
+                        <p>We're always here to help with any inquiries or concerns.</p>
                     </div>
                 </div>
                 <div class="col-6 col-md-3">
                     <div class="feature-box">
                         <i class="fas fa-hand-holding-usd"></i>
                         <h5>Affordable Prices</h5>
-                        <p>Get high-quality tech without breaking the bank.</p>
+                        <p>Get high-quality tech without breaking bank.</p>
                     </div>
                 </div>
             </div>
@@ -404,18 +412,17 @@
     <!-- Our Team -->
     <section class="team-section text-center">
         <div class="container">
-            <h2 class="mb-5">Meet Our Team</h2>
-            <div class="row g-4 justify-content-center">
+            <h2 class="mb-4">Meet Our Team</h2>
+            <div class="row g-3 justify-content-center">
                 <div class="col-6 col-md-4 col-lg-3">
-                    <div class="team-card p-3">
-                        <img src="{% static '/images/th.webp' %}" alt="Team Member">
+                    <div class="team-card p-2">
+                        <img src="{% static '/images/th.webp' %}" alt="Team Member1">
                         <h6>Nga Khant</h6>
                         <small>Founder / Developer</small>
 
-                        <div class="contact-links text-center text-dark ">
+                        <div class="social-links ">
                             <a href="" class="btn "><i class="fab fa-facebook"></i></a>
                             <a href="#" class="btn"><i class="fab fa-telegram"></i></a>
-
                             <a href="#" class="btn"><i class="fab fa-github "></i></i></a>
                             <a href="#" class="btn"><i class="fab fa-instagram"></i></a>
 
@@ -423,36 +430,36 @@
                     </div>
                 </div>
                 <div class="col-6 col-md-4 col-lg-3">
-                    <div class="team-card p-3">
-                        <img src="{% static '/images/OIP (1).jfif' %}" alt="Team Member">
-                        <h6>Jane Doe</h6>
+                    <div class="team-card p-2">
+                        <img src="{% static '/images/download.webp' %}" alt="Team Member2">
+                        <h6>Smith</h6>
+                        <small>Customer support</small>
+
+                        <div class="social-links ">
+                            <a href="" class="btn "><i class="fab fa-facebook"></i></a>
+                            <a href="#" class="btn"><i class="fab fa-telegram"></i></a>
+                            <a href="#" class="btn"><i class="fab fa-github "></i></i></a>
+                            <a href="#" class="btn"><i class="fab fa-instagram"></i></a>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="team-card p-2">
+                        <img src="{% static '/images/OIP (1).jfif' %}" alt="Team Member2">
+                        <h6>John Doe</h6>
                         <small>Marketing Manager</small>
 
-                        <div class="contact-links text-center text-dark ">
+                        <div class="social-links ">
                             <a href="" class="btn "><i class="fab fa-facebook"></i></a>
                             <a href="#" class="btn"><i class="fab fa-telegram"></i></a>
-
                             <a href="#" class="btn"><i class="fab fa-github "></i></i></a>
                             <a href="#" class="btn"><i class="fab fa-instagram"></i></a>
 
                         </div>
                     </div>
                 </div>
-                <div class="col-6 col-md-4 col-lg-3">
-                    <div class="team-card p-3">
-                        <img src="{% static '/images/download.webp' %}" alt="Team Member">
-                        <h6>John Smith</h6>
-                        <small>Customer Support</small>
-                        <div class="contact-links text-center text-dark ">
-                            <a href="" class="btn "><i class="fab fa-facebook"></i></a>
-                            <a href="#" class="btn"><i class="fab fa-telegram"></i></a>
 
-                            <a href="#" class="btn"><i class="fab fa-github "></i></i></a>
-                            <a href="#" class="btn"><i class="fab fa-instagram"></i></a>
-
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
@@ -460,13 +467,13 @@
 
 
 
-
+    <!-- Customer review section -->
     <section id="customer_reviews">
         <div class="container-fluid bg-light py-3 mt-2">
             <h2 class="fw-bold mb-3">Customer Reviews</h2>
             <div class="row justify-content-center g-1">
                 <div class="col-6  col-md-4 col-lg-3 mb-1">
-                    <div class="card shadow-sm rounded ">
+                    <div class="card shadow-sm rounded customer_reviews_card">
                         <div class="card-body">
                             <div class="d-flex justify-content-between">
                                 <div class="d-flex">
@@ -494,7 +501,7 @@
                     </div>
                 </div>
                 <div class="col-6  col-md-4 col-lg-3 mb-1">
-                    <div class="card shadow-sm rounded ">
+                    <div class="card shadow-sm rounded customer_reviews_card">
                         <div class="card-body">
                             <div class="d-flex justify-content-between">
                                 <div class="d-flex">
@@ -522,7 +529,7 @@
                     </div>
                 </div>
                 <div class="col-6  col-md-4 col-lg-3 mb-1">
-                    <div class="card shadow-sm rounded ">
+                    <div class="card shadow-sm rounded customer_reviews_card">
                         <div class="card-body">
                             <div class="d-flex justify-content-between">
                                 <div class="d-flex">
@@ -550,7 +557,7 @@
                     </div>
                 </div>
                 <div class="col-6  col-md-4 col-lg-3 mb-1">
-                    <div class="card shadow-sm rounded ">
+                    <div class="card shadow-sm rounded customer_reviews_card ">
                         <div class="card-body">
                             <div class="d-flex justify-content-between">
                                 <div class="d-flex">
@@ -558,7 +565,7 @@
                                         class="rounded-circle me-3 customer_reviews_imgs" width="50" height="50"
                                         alt="User1">
                                     <div>
-                                        <h5 class="mb-0 customer_name">Willan Jame</h5>
+                                        <h5 class="mb-0 customer_name">Willan</h5>
                                         <div class="text-warning cus-rating">
                                             <i class="fas fa-star"></i>
                                             <i class="fas fa-star"></i>
@@ -657,12 +664,6 @@
         </div>
     </section>
 
-    {% endif %}
-
-
-
-
-
     <!--  -->
     <footer class="mt-4">
         <div class="d-flex flex-column text-start ms-5">
@@ -672,8 +673,15 @@
             <a href="#contact">Contact</a>
         </div>
         <p>© 2025 Universe By Nga Khant. All Rights Reserved.</p>
-
     </footer>
+
+    {% endif %}
+
+
+
+
+
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {

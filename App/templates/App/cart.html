@@ -21,9 +21,8 @@
         background-color: #f4f4f4;
     }
 
-    table {
-        border: 1px solid black;
-
+    .table_titles {
+        font-size: 1rem;
     }
 
     section .cart_imgs {
@@ -76,7 +75,7 @@
                 <div class="col-12">
                     <div class="card shadow rounded-3">
                         <div class="card-body">
-                            <div class="d-flex mb-2 fw-bold">
+                            <div class="d-flex mb-2 fw-bold table_titles">
                                 <div style="flex:2">Product</div>
                                 <div style="flex:2"></div>
 
@@ -87,9 +86,7 @@
                             </div>
                             <hr>
 
-                            {% if not order_items %}
-                            <h6 class="text-center">There is no product in your cart</h6>
-                            {% endif %}
+
                             {% for item in order_items %}
                             <div class="d-flex mb-2">
                                 <div style="flex:1"><img src="{{item.product.image.url}}" alt="Product1"
@@ -97,10 +94,12 @@
                                 <div style="flex:3">{{ item.product.name }}</div>
                                 <div style="flex:1">$ {{ item.product.price }}</div>
                                 <div style="flex:2"><button data-productID="{{item.product.id}}" data-action="add"
+                                        data-price="{{item.product.price}}" data-quantity="{{item.quantity}}"
                                         class="btn btn-outline-dark rounded-5 btn-tiny update-cart"><i
                                             class="fas fa-add"></i></button><span
                                         class="mx-2">{{item.quantity}}</span><button
                                         data-productID="{{item.product.id}}" data-action="remove"
+                                        data-price="{{item.product.price}}" data-quantity="{{item.quantity}}"
                                         class="btn btn-outline-dark rounded-5 btn-tiny update-cart"><i
                                             class="fas fa-subtract "></i></button>
                                 </div>
@@ -110,11 +109,15 @@
                                             class="fas fa-trash text-danger"></i></button></div>
                             </div>
                             <hr>
+                            {% empty %}
+                            <h6 class="text-center">There is no product in your cart</h6>
+
                             {% endfor %}
 
                             <hr>
-                            <div class="mt-5">
 
+                            <div class="mt-5">
+                                {% if order_items %}
                                 <div class="d-flex px-3 mb-1">
                                     <div style="flex:1">
                                         <h6>Subtotal</h6>
@@ -137,21 +140,22 @@
                                     <div style="flex:1"><span class="fw-bold">Total</span></div>
                                     <div style="flex:1" class=""><span class="fw-bold">$ {{total_cost}}</span></div>
                                 </div>
-
+                                {% endif %}
 
                                 <div class="d-flex justify-content-around mt-4 px-4">
                                     <a href="{% url 'home' %}"
                                         class="btn btn-outline-dark rounded-5 btn-sm btn-md-lg"><i
-                                            class="fa-solid fa-arrow-left me-2"></i>Return to Shop</a>
+                                            class="fa-solid fa-arrow-left me-2"></i>To Shop</a>
                                     <a href="{% url 'checkout' %}" target="_blank"
-                                        class="btn btn-outline-primary rounded-5 btn-sm">
-                                        Proceed to Checkout <i class="fa-solid fa-arrow-right ms-2"></i>
+                                        class="btn btn-outline-primary rounded-5 ">
+                                        To Checkout <i class="fa-solid fa-arrow-right ms-2"></i>
                                     </a>
                                 </div>
 
 
 
                             </div>
+
                         </div>
                     </div>
 

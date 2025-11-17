@@ -137,7 +137,7 @@ form .search-btn:hover {
 
 /* Hero Section */
 .hero {
-  height: 95%;
+  min-height: 80vh;
   background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
     url("https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1200&q=80")
       center/cover no-repeat;
@@ -191,32 +191,38 @@ form .search-btn:hover {
 }
 
 /* Why choose us */
-.why-choose {
-  background: #fff;
-}
 
 .feature-box {
   text-align: center;
-  padding: 20px;
+  padding: 17px;
   border-radius: 12px;
-  background-color: #f1f4f9;
+  background-color: #e7efff;
   transition: 0.3s;
 }
-
+@media (max-width: 768px) {
+  .feature-box {
+    min-height: 210px;
+  }
+}
 .feature-box:hover {
   transform: translateY(-5px);
-  background-color: #e7efff;
+  background-color: #bcd0f0;
 }
 
 .feature-box i {
-  font-size: 3rem;
+  font-size: 2rem;
   color: #0d6efd;
   margin-bottom: 15px;
 }
 
 .feature-box h5 {
-  font-weight: 600;
+  /* font-weight: 600; */
+  font-size: 1.1rem;
   margin-bottom: 10px;
+}
+
+.feature-box p {
+  font-size: 0.8rem;
 }
 
 /* Team section */
@@ -224,15 +230,14 @@ form .search-btn:hover {
   padding: 70px 0;
   background-color: #f8f9fa;
 }
-.contact-links a i {
-  font-size: 1.1rem;
-}
+
 .team-card {
   border: none;
   border-radius: 15px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
   background: #fff;
+  box-sizing: border-box;
   transition: transform 0.3s;
 }
 
@@ -242,8 +247,8 @@ form .search-btn:hover {
 
 .team-card img {
   border-radius: 50%;
-  width: 100px;
-  height: 100px;
+  width: 90px;
+  height: 90px;
   object-fit: cover;
   margin: 20px auto;
 }
@@ -253,7 +258,31 @@ form .search-btn:hover {
 }
 
 .team-card small {
+  font-size: 0.9rem;
   color: #888;
+}
+
+.team-card .social-links {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap; /* IMPORTANT: allow wrapping */
+  padding: 10px 0;
+}
+
+.team-card .social-links a {
+  border: 1px solid #ddd;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.team-card .social-links a i {
+  font-size: 1rem;
+  color: #333;
 }
 
 /* Customer Reviews */
@@ -270,13 +299,18 @@ form .search-btn:hover {
 }
 
 .cus-rating {
-  font-size: 0.7rem;
+  font-size: 0.6rem;
 }
 
 .customer_review_description {
   font-size: 0.75rem;
 }
 
+@media (max-width: 576px) {
+  .customer_reviews_card {
+    min-height: 115px;
+  }
+}
 /* Contact Section */
 
 .contact {
